@@ -70,14 +70,15 @@ jobs:
 
       # Build and push Docker image with Buildx (don't push on PR)
       # https://github.com/docker/build-push-action
-      - name: Build and push Docker image
+      - name: Build and push
         id: build-and-push
-        uses: docker/build-push-action@ad44023a93711e3deb337508980b4b5e9bcdc5dc
-        with:
-          context: .
-          push: ${{ github.event_name != 'pull_request' }}
-          tags: ${{ steps.meta.outputs.tags }}
-          labels: ${{ steps.meta.outputs.labels }}
+        env:
+          IMAGE: ${{ env.REGISTRY }}/${{ env.REPOSITORY }}
+        run: |
+          docker build -f docker/Dockerfile -t ${{ env.IMAGE }} .
+          docker push ${{ env.IMAGE }}
+          echo "::set-output name=digest::$(docker inspect --format='{{index .RepoDigests 0}}' ${{ env.IMAGE }} | cut -d'@' -f2)"
+
 
       # Sign the resulting Docker image digest except on PRs.
       # This will only write to the public Rekor transparency log when the Docker
