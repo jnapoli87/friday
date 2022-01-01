@@ -73,7 +73,7 @@ jobs:
       - name: Build and push
         id: build-and-push
         env:
-          IMAGE: ${{ env.REGISTRY }}/${{ env.REPOSITORY }}
+          IMAGE: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
         run: |
           docker build -f docker/Dockerfile -t ${{ env.IMAGE }} .
           docker push ${{ env.IMAGE }}
