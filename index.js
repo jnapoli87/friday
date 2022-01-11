@@ -1,5 +1,6 @@
 const express = require('express')
 const stream = require('youtube-audio-stream')
+const path = require('path')
 const ffmpegPath = require('@ffmpeg-installer/ffmpeg').path
 const ffmpeg = require('fluent-ffmpeg')
 
@@ -8,8 +9,7 @@ const url = 'https://www.youtube.com/watch?v=4z95SAFud7w'
 
 ffmpeg.setFfmpegPath(ffmpegPath)
 
-app.get('/', (req, res) => {
-  //   const youtubeUrl = 'http://youtube.com/watch?v=' + req.params.id;
+app.get('/audio', (req, res) => {
   try {
     stream(url).pipe(res)
   } catch (ex) {
@@ -17,5 +17,8 @@ app.get('/', (req, res) => {
   }
 });
 
-app.use(express.static('public'))
+app.get('/', (req, res) => {
+  res.sendFile(path.resolve(__dirname, 'public/', 'index.html'));
+});
+
 app.listen(3000)
