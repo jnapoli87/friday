@@ -1,4 +1,4 @@
-FROM node:lts-alpine3.12
+FROM node:lts-alpine3.15
 
 RUN apk update && apk add ffmpeg && apk add python3 && rm -rf /var/cache/apk/*
 WORKDIR /app
